@@ -1,5 +1,6 @@
 package com.example.objectowl;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.os.Bundle;
@@ -34,7 +35,9 @@ public class LoginPageActivity extends AppCompatActivity {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                // Handle click event, e.g., open registration activity
+                // Start the RegistrationPageActivity
+                Intent intent = new Intent(LoginPageActivity.this, RegistrationPageActivity.class);
+                startActivity(intent);
             }
 
             @Override
