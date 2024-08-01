@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342981841040",
+    "project_id": "objectowl-ad2b1",
+    "storage_bucket": "objectowl-ad2b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342981841040:android:afe34f06b01b90ef158815",
+        "android_client_info": {
+          "package_name": "com.example.objectowl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342981841040-0hv03pra1k43crrvnjo2ll6nivupgmem.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.objectowl",
+            "certificate_hash": "f2cf766f933357b623a2b15b362b5e4057a4d009"
+          }
+        },
+        {
+          "client_id": "342981841040-ttcs6vrk9q3t3cev70arg4r4s6p1b3vb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHu2GduYAv9PCb5mRZpwA1wCFAVZJYnG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342981841040-ttcs6vrk9q3t3cev70arg4r4s6p1b3vb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
