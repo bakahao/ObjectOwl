@@ -21,6 +21,7 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 
 public class LoginPageActivity extends AppCompatActivity {
 
@@ -73,6 +74,14 @@ public class LoginPageActivity extends AppCompatActivity {
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), 16 * getResources().getDisplayMetrics().density);
             }
+        });
+
+        // Find the login button and set up a click listener
+        MaterialButton loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(v -> {
+            // Navigate to HomePageActivity
+            Intent intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
+            startActivity(intent);
         });
     }
 }

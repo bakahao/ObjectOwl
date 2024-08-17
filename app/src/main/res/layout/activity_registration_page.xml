@@ -42,6 +42,7 @@
         android:background="@drawable/rounded_edittext"
         android:hint="Name"
         android:padding="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewRegister"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
@@ -77,6 +78,17 @@
         android:layout_marginRight="20dp"
         android:minHeight="50dp"/>
 
+    <ToggleButton
+        android:id="@+id/toggle_editpassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/editTextPassword"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="29dp"
+        android:background="@null"
+        android:textOff="Show"
+        android:textOn="Hide" />
+
     <!-- Re-enter Password Field -->
     <EditText
         android:id="@+id/editTextRePassword"
@@ -91,6 +103,17 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:minHeight="50dp"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_repassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/editTextRePassword"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:background="@null"
+        android:textOff="Show"
+        android:textOn="Hide" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerButton"

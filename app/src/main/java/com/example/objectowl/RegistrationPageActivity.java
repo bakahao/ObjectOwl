@@ -3,6 +3,8 @@ package com.example.objectowl;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import android.content.Intent;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,8 +76,35 @@ public class RegistrationPageActivity extends AppCompatActivity {
                 createAccount(email, password);
             }
         });
-    }
 
+        ////Show password in password text field
+        EditText passwordText = findViewById(R.id.editTextPassword);
+        ToggleButton toggleButton = findViewById(R.id.toggle_editpassword);
+
+        toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Show password
+                passwordText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                // Hide password
+                passwordText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+
+        //Show password in Re-enter password text field
+        EditText checkPasswordText = findViewById(R.id.editTextRePassword);
+        ToggleButton checkPasswordtoggleButton = findViewById(R.id.toggle_repassword);
+
+        checkPasswordtoggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Show password
+                checkPasswordText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                // Hide password
+                checkPasswordText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+    }
 
     @Override
     public void onStart() {
