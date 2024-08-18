@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home_icon"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_recognize"
+        android:icon="@drawable/camera_icon"
+        android:title="Recognize Object" />
+    <item
+        android:id="@+id/nav_guide"
+        android:icon="@drawable/guide_icon"
+        android:title="User Guide" />
+    <item
+        android:id="@+id/nav_support"
+        android:icon="@drawable/customer_support_icon"
+        android:title="Customer Support" />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/logout_icon"
+        android:title="Logout" />
+</menu>
