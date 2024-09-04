@@ -3,27 +3,73 @@ package com.example.objectowl;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 
-public class HomePageActivity extends AppCompatActivity {
+public class UserGuidePageActivity extends AppCompatActivity {
 
+    private boolean isContentVisible = false, isContentVisible1 = false;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private MaterialButton textButton, textButton1;
+    private LinearLayout slidingContent, slidingContent1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_user_guide_page);
 
         // Initialize the DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+        textButton = findViewById(R.id.text_button);
+        slidingContent = findViewById(R.id.sliding_content);
+        textButton1 = findViewById(R.id.text_button1);
+        slidingContent1 = findViewById(R.id.sliding_content1);
+
+        textButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isContentVisible) {
+                    // Slide up and hide content
+                    slidingContent.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up));
+                    slidingContent.setVisibility(View.GONE);
+                } else {
+                    // Slide down and show content
+                    slidingContent.setVisibility(View.VISIBLE);
+                    slidingContent.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down));
+                }
+                isContentVisible = !isContentVisible;
+            }
+        });
+
+        textButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isContentVisible1) {
+                    // Slide up and hide content
+                    slidingContent1.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up));
+                    slidingContent1.setVisibility(View.GONE);
+                } else {
+                    // Slide down and show content
+                    slidingContent1.setVisibility(View.VISIBLE);
+                    slidingContent1.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down));
+                }
+                isContentVisible1 = !isContentVisible1;
+            }
+        });
 
         // Setup ActionBarDrawerToggle
         toggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -86,7 +132,9 @@ public class HomePageActivity extends AppCompatActivity {
     // Methods to handle clicks for each menu item
     private void handleHomeClick() {
         // TODO: Add your action for the Home button here
-
+        Intent intent = new Intent(UserGuidePageActivity.this, HomePageActivity.class);
+        startActivity(intent);
+        finish(); // Close the HomePageActivity to prevent returning with the back button
     }
 
     private void handleRecognizeClick() {
@@ -95,8 +143,7 @@ public class HomePageActivity extends AppCompatActivity {
 
     private void handleGuideClick() {
         // TODO: Add your action for the User Guide button here
-        // Navigate to LoginPageActivity when logout is clicked
-        Intent intent = new Intent(HomePageActivity.this, UserGuidePageActivity.class);
+        Intent intent = new Intent(UserGuidePageActivity.this, UserGuidePageActivity.class);
         startActivity(intent);
         finish(); // Close the HomePageActivity to prevent returning with the back button
     }
@@ -107,8 +154,9 @@ public class HomePageActivity extends AppCompatActivity {
 
     private void handleLogoutClick() {
         // Navigate to LoginPageActivity when logout is clicked
-        Intent intent = new Intent(HomePageActivity.this, LoginPageActivity.class);
+        Intent intent = new Intent(UserGuidePageActivity.this, LoginPageActivity.class);
         startActivity(intent);
         finish(); // Close the HomePageActivity to prevent returning with the back button
     }
+
 }

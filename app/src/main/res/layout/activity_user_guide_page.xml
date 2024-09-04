@@ -43,28 +43,92 @@
                 android:layout_marginTop="80dp"
                 android:textStyle="bold"/>
 
-            <!-- Square Container with Curved Corners under "Data Analytics" -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/squareContainer"
+<!--            <TextView-->
+<!--                android:id="@+id/textViewGuideContent"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Write content here..."-->
+<!--                android:layout_below="@id/textViewUserGuide"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginStart="15dp"-->
+<!--                android:layout_marginEnd="15dp"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"/>-->
+
+            <!-- The TextView that acts as a button -->
+            <!-- The content that will slide out -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewUserGuide"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="#FFE9EDC9">
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:backgroundTint="#FFCCD5AE"
+                android:text="How to recognize an object?"
+                android:minHeight="60dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif" />
 
-                <!-- Container with Content -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/sliding_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_below="@id/text_button"
+                android:padding="10dp"
+                android:background="#D9A76C">
+
+                <!-- Add the content that will slide out -->
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:text="This is the sliding content"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
 
-                </LinearLayout>
+                <!-- Add more content if needed -->
+            </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sliding_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:backgroundTint="#FFCCD5AE"
+                android:text="How to register an account?"
+                android:minHeight="60dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif" />
+
+            <LinearLayout
+                android:id="@+id/sliding_content1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_below="@id/text_button1"
+                android:padding="10dp"
+                android:background="#D9A76C">
+
+                <!-- Add the content that will slide out -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="This is the sliding content1"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
+
+                <!-- Add more content if needed -->
+            </LinearLayout>
+
 
         </RelativeLayout>
 
