@@ -1,0 +1,18 @@
+0 Table
+1 Chair
+2 Sofa
+3 Bed
+4 Television
+5 Lamp
+6 Fan
+7 Cup
+8 Plate
+9 Spoon
+10 Fork
+11 Knife
+12 Toothbrush
+13 Towel
+14 Fridge
+15 Remote Control
+16 Clock
+17 Mirror
