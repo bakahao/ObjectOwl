@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,13 +35,16 @@
                 android:padding="16dp">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/householdButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_button"
                     android:layout_margin="5dp"
                     android:layout_columnWeight="1"
                     android:layout_rowWeight="1"
-                    android:text="Button 1" />
+                    app:backgroundTint="#D4A373"
+                    android:textColor="@color/black"
+                    android:text="Household Object" />
 
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="0dp"
@@ -49,6 +53,8 @@
                     android:layout_margin="5dp"
                     android:layout_columnWeight="1"
                     android:layout_rowWeight="1"
+                    app:backgroundTint="#D4A373"
+                    android:textColor="@color/black"
                     android:text="Button 2" />
 
                 <com.google.android.material.button.MaterialButton
@@ -58,6 +64,8 @@
                     android:layout_margin="5dp"
                     android:layout_columnWeight="1"
                     android:layout_rowWeight="1"
+                    app:backgroundTint="#D4A373"
+                    android:textColor="@color/black"
                     android:text="Button 3" />
 
                 <com.google.android.material.button.MaterialButton
@@ -67,6 +75,8 @@
                     android:layout_margin="5dp"
                     android:layout_columnWeight="1"
                     android:layout_rowWeight="1"
+                    app:backgroundTint="#D4A373"
+                    android:textColor="@color/black"
                     android:text="Button 4" />
 
             </GridLayout>
