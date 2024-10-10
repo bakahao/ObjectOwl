@@ -47,6 +47,7 @@
                     android:text="Household Object" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/animalButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_button"
@@ -55,9 +56,10 @@
                     android:layout_rowWeight="1"
                     app:backgroundTint="#D4A373"
                     android:textColor="@color/black"
-                    android:text="Button 2" />
+                    android:text="Animal" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/vehicleButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_button"
@@ -66,9 +68,10 @@
                     android:layout_rowWeight="1"
                     app:backgroundTint="#D4A373"
                     android:textColor="@color/black"
-                    android:text="Button 3" />
+                    android:text="Vehicle" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fruitButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_button"
@@ -77,7 +80,7 @@
                     android:layout_rowWeight="1"
                     app:backgroundTint="#D4A373"
                     android:textColor="@color/black"
-                    android:text="Button 4" />
+                    android:text="Fruit" />
 
             </GridLayout>
 

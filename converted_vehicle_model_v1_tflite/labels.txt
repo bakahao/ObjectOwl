@@ -1,0 +1,19 @@
+0 Car
+1 Bicycle
+2 Motorcycle
+3 Bus
+4 Train
+5 Airplane
+6 Lorry
+7 Boat
+8 Scooter
+9 Tractor
+10 Ambulance
+11 Fire truck
+12 Police car
+13 Helicopter
+14 Van
+15 Bulldozer
+16 Excavator
+17 Forklift
+18 Garbage truck

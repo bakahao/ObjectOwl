@@ -10,6 +10,7 @@ import android.service.controls.templates.ThumbnailTemplate;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,9 +35,9 @@ public class HomePageActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    TextView result, confidence;
-    ImageView imageView;
+    ImageButton cameraButton;
     int imageSize = 224;
+    private static final int CAMERA_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class HomePageActivity extends AppCompatActivity {
         // Initialize the DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
+        cameraButton = findViewById(R.id.cameraButton);
+
+        cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
         // Setup ActionBarDrawerToggle
         toggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -122,6 +126,21 @@ public class HomePageActivity extends AppCompatActivity {
         }
     }
 
+    // Override onRequestPermissionsResult to handle the user's response to the permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            // Check if the permission was granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission was granted, so launch the camera
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, 1);
+            }
+        }
+    }
+
     private void handleGuideClick() {
         // TODO: Add your action for the User Guide button here
         // Navigate to User Guide Page
@@ -164,22 +183,5 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
 
-//run the model
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if (requestCode == 1 && resultCode == RESULT_OK) {
-//            //get the image taken by user
-//            Bitmap image = (Bitmap) data.getExtras().get("data");
-//
-//            //crop the image to fix tensorflow lite dimension
-//            int dimension = Math.min(image.getWidth(), image.getHeight());
-//            image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
-//            //imageView.setImageBitmap(image);
-//            image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-//
-//            //Use the Householdmodel class to classify the image
-//            HouseHoldModel.classifyImage(image, this, result, confidence, imageView);
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
+
 }
