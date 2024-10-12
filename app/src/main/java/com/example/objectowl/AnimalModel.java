@@ -3,10 +3,11 @@ package com.example.objectowl;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.objectowl.ml. AnimalModelV1;
+import com.example.objectowl.ml.AnimalModelV1;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -15,7 +16,23 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import android.os.Environment;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.FileDownloadTask;
+import java.io.File;
+import java.io.FileInputStream;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Row;
+
 public class AnimalModel {
+
+    // Initialize Firebase Storage
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://objectowl-ad2b1.appspot.com/AnimalModel/animal_des.xlsx");
+
 
     private static final int imageSize = 224; // Make sure this matches the input size your model expects
 

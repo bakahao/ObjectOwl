@@ -77,18 +77,23 @@ public class ClassifiedPage extends AppCompatActivity {
 
         // Check which model to run
         if (modelType.equals("household")) {
-            // Call the HouseholdModel to classify the image
-            HouseHoldModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
+            // Create an instance of HouseholdModel and call classifyImage
+            HouseHoldModel houseHoldModel = new HouseHoldModel();
+            houseHoldModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
         } else if (modelType.equals("animal")) {
-            // Call the AnimalModel to classify the image (assuming AnimalModel is similar to HouseHoldModel)
-            AnimalModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
+            // Create an instance of AnimalModel and call classifyImage
+            AnimalModel animalModel = new AnimalModel();
+            animalModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
         } else if (modelType.equals("vehicle")) {
-            // Call the VehicleModel to classify the image (assuming AnimalModel is similar to HouseHoldModel)
-            VehicleModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
-        }else if (modelType.equals("fruit")) {
-            // Call the VehicleModel to classify the image (assuming AnimalModel is similar to HouseHoldModel)
-            FruitModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
+            // Create an instance of VehicleModel and call classifyImage
+            VehicleModel vehicleModel = new VehicleModel();
+            vehicleModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
+        } else if (modelType.equals("fruit")) {
+            // Create an instance of FruitModel and call classifyImage
+            FruitModel fruitModel = new FruitModel();
+            fruitModel.classifyImage(image, this, resultTextView, confidenceTextView, classifiedImageView);
         }
+
         // Retrieve classification result and confidence
         String result = resultTextView.getText().toString();
         String confidence = confidenceTextView.getText().toString();

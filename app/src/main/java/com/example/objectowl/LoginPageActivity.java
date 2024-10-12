@@ -16,19 +16,35 @@ import android.view.ViewOutlineProvider;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginPageActivity extends AppCompatActivity {
+
+    // Declare FirebaseAuth instance
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
+        // Initialize FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
 
         // Set up "Register here" clickable and underlined
         TextView registerText = findViewById(R.id.register_text);
@@ -76,12 +92,43 @@ public class LoginPageActivity extends AppCompatActivity {
             }
         });
 
-        // Find the login button and set up a click listener
         MaterialButton loginButton = findViewById(R.id.login_button);
+        EditText emailEditText = findViewById(R.id.email);
+
+        // Set up the login button click listener with input validation and Firebase Authentication
         loginButton.setOnClickListener(v -> {
-            // Navigate to HomePageActivity
-            Intent intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
-            startActivity(intent);
+            // Get the text from email and password fields
+            String email = emailEditText.getText().toString().trim();
+            String password = passwordEditText.getText().toString().trim();
+
+            // Validate email and password inputs
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(LoginPageActivity.this, "Please fill in your Email and Password.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Sign in with Firebase
+                signInWithFirebase(email, password, emailEditText, passwordEditText);
+            }
         });
+    }
+
+    private void signInWithFirebase(String email, String password, EditText emailEditText, EditText passwordEditText) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, navigate to HomePageActivity
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        Intent intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
+                        startActivity(intent);
+                        finish();  // Close the login page
+                    } else {
+                        // If sign in fails, display a message to the user
+                        try {
+                            throw task.getException();
+                        } catch (Exception e) {
+                            Toast.makeText(LoginPageActivity.this, "Email or Password is incorrect", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

@@ -1,4 +1,5 @@
 [versions]
+poi = "5.2.2"
 agp = "8.4.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -13,6 +14,8 @@ tensorflowLiteSupport = "0.1.0"
 tensorflowLiteMetadata = "0.1.0"
 
 [libraries]
+apache-poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+apache-poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
