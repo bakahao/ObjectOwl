@@ -1,6 +1,7 @@
 package com.example.objectowl;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.util.Log;
@@ -13,6 +14,7 @@ import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -26,6 +28,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
+import android.content.res.AssetManager;
+import java.io.InputStream;
 
 public class AnimalModel {
 
@@ -74,7 +78,8 @@ public class AnimalModel {
             result.setText(classes[maxPos]);
 
             // Display confidence levels for all classes
-            displayConfidences(confidences, classes, confidence);
+            displayConfidences(context, classes[maxPos], confidence);
+
 
             // Set the resized image in the ImageView (for displaying)
             imageView.setImageBitmap(resizedImage);
@@ -121,11 +126,43 @@ public class AnimalModel {
     }
 
     // Display confidence values for each class in a TextView
-    private static void displayConfidences(float[] confidences, String[] classes, TextView confidence) {
-        StringBuilder confidenceText = new StringBuilder();
-        for (int i = 0; i < classes.length; i++) {
-            confidenceText.append(String.format("%s: %.1f%%\n", classes[i], confidences[i] * 100));
+    // This method will now display the description of the recognized animal
+    private static void displayConfidences(Context context, String recognizedAnimal, TextView confidence) {
+        try {
+            // Get the asset manager
+            AssetManager assetManager = context.getAssets();
+
+            // Open the Excel file from the assets folder
+            InputStream fis = assetManager.open("animal_des.xlsx");
+
+            // Create a workbook and get the first sheet
+            Workbook workbook = WorkbookFactory.create(fis);
+            Sheet sheet = workbook.getSheetAt(0); // Assuming the descriptions are in the first sheet
+
+            // Loop through the rows of the sheet
+            for (Row row : sheet) {
+                String animalName = row.getCell(0).getStringCellValue(); // Assuming animal names are in the first column
+                String description = row.getCell(1).getStringCellValue(); // Assuming descriptions are in the second column
+
+                // If the recognized animal matches the animal name in the Excel file, display the description
+                if (animalName.equalsIgnoreCase(recognizedAnimal)) {
+                    confidence.setText(description); // Set the description in the TextView
+                    break; // Exit the loop once the description is found
+                }
+            }
+
+            // Close the file input stream and workbook
+            fis.close();
+            workbook.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            confidence.setText("Error loading description"); // Error message if something goes wrong
+        } catch (Exception e) {
+            e.printStackTrace();
+            confidence.setText("Error processing file");
         }
-        confidence.setText(confidenceText.toString());
     }
+
+
 }
