@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,18 +17,13 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import android.os.Environment;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.FileDownloadTask;
-import java.io.File;
-import java.io.FileInputStream;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
-import android.content.res.AssetManager;
-import java.io.InputStream;
 
 public class AnimalModel {
 
@@ -77,7 +71,7 @@ public class AnimalModel {
             // Set the result in the TextView
             result.setText(classes[maxPos]);
 
-            // Display confidence levels for all classes
+            // Display description
             displayConfidences(context, classes[maxPos], confidence);
 
 
@@ -125,8 +119,7 @@ public class AnimalModel {
         return maxPos;
     }
 
-    // Display confidence values for each class in a TextView
-    // This method will now display the description of the recognized animal
+    //display the description of the recognized animal
     private static void displayConfidences(Context context, String recognizedAnimal, TextView confidence) {
         try {
             // Get the asset manager
