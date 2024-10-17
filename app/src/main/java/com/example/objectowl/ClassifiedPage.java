@@ -10,12 +10,25 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClassifiedPage extends AppCompatActivity {
 
     ImageView classifiedImageView;
     Bitmap image;
     MaterialButton householdButton, animalButton, vehicleButton, fruitButton;
+    FirebaseStorage storage;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +40,12 @@ public class ClassifiedPage extends AppCompatActivity {
         animalButton = findViewById(R.id.animalButton);
         vehicleButton = findViewById(R.id.vehicleButton);
         fruitButton = findViewById(R.id.fruitButton);
+
+        // Initialize Firebase Storage and Realtime Database references
+        storage = FirebaseStorage.getInstance();
+        databaseReference = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("History");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userUID = currentUser.getUid();
 
         // Get the image from the intent
         image = getIntent().getParcelableExtra("image");
@@ -98,11 +117,73 @@ public class ClassifiedPage extends AppCompatActivity {
         String result = resultTextView.getText().toString();
         String confidence = confidenceTextView.getText().toString();
 
-        // Pass the image, result, and confidence to ResultPage
+        uploadImageToFirebaseStorage(result, confidence);
+    }
+
+    private void uploadImageToFirebaseStorage(String recognizedObject, String description) {
+        // Create a reference to the Firebase Storage location
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://objectowl-ad2b1.appspot.com").child("images/" + System.currentTimeMillis() + ".jpg");
+
+        // Convert bitmap to byte array
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
+
+        // Upload image to Firebase Storage
+        UploadTask uploadTask = storageRef.putBytes(imageData);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // Once the image is uploaded, get the download URL
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String downloadUrl = uri.toString();
+                // Save metadata (recognized object, description, and image URL) to Firebase Realtime Database
+                saveMetadataToFirebase(recognizedObject, description, downloadUrl);
+            });
+        }).addOnFailureListener(e -> {
+            // Handle any errors during upload
+            e.printStackTrace();
+        });
+    }
+
+    private void saveMetadataToFirebase(String recognizedObject, String description, String imageUrl) {
+        // Get the current user's UID (make sure the user is authenticated)
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // Handle the case where the user is not logged in
+            System.out.println("Error: User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get the unique user ID
+
+        // Create a unique ID for each history entry under the user UID
+        String historyId = databaseReference.child(userUID).push().getKey();
+
+        // Create a map to store the history data
+        Map<String, Object> historyData = new HashMap<>();
+        historyData.put("objectName", recognizedObject);
+        historyData.put("description", description);
+        historyData.put("imageUrl", imageUrl);
+        historyData.put("timestamp", System.currentTimeMillis());
+
+        // Save the history data to Firebase Realtime Database under "History -> userUID -> historyId"
+        if (historyId != null) {
+            databaseReference.child(userUID).child(historyId).setValue(historyData).addOnSuccessListener(aVoid -> {
+                // Once the data is saved, navigate to the ResultPage with the image, result, and confidence
+                navigateToResultPage(recognizedObject, description, image);
+            }).addOnFailureListener(e -> {
+                // Handle errors if data saving fails
+                e.printStackTrace();
+            });
+        }
+    }
+
+
+    private void navigateToResultPage(String result, String confidence, Bitmap image) {
+        // Create an intent to pass the result, confidence, and image to ResultPage
         Intent intent = new Intent(ClassifiedPage.this, ResultPage.class);
-        intent.putExtra("image", image);
         intent.putExtra("result", result);
         intent.putExtra("confidence", confidence);
+        intent.putExtra("image", image);
         startActivity(intent);
     }
+
 }

@@ -186,6 +186,16 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="30dp"/>
 
+            <!-- History Layout -->
+            <LinearLayout
+                android:id="@+id/historyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/historyHeader"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="10dp"/>
+
         </RelativeLayout>
 
     </ScrollView>

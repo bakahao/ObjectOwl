@@ -7,7 +7,9 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.service.controls.templates.ThumbnailTemplate;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -17,18 +19,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.objectowl.ml.HouseHoldModelV1;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import android.Manifest;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import org.tensorflow.lite.DataType;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import android.widget.LinearLayout;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -38,6 +39,10 @@ public class HomePageActivity extends AppCompatActivity {
     ImageButton cameraButton;
     int imageSize = 224;
     private static final int CAMERA_REQUEST_CODE = 100;
+    LinearLayout historyLayout;
+    DatabaseReference historyRef;
+    FirebaseAuth auth;
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,34 @@ public class HomePageActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         cameraButton = findViewById(R.id.cameraButton);
+        historyLayout = findViewById(R.id.historyLayout);
+
+        // Initialize Firebase Authentication and get the current user
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+
+        // Initialize Firebase Realtime Database reference for "History" node
+        historyRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("History");
+
+        // Check if the user is authenticated before proceeding
+        if (currentUser != null) {
+            // Get the current user UID
+            String userUID = currentUser.getUid();
+
+            // Initialize Firebase Realtime Database reference for "History -> userUID"
+            historyRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                    .getReference("History").child(userUID);
+
+            // Call method to load history and create buttons
+            loadHistoryFromFirebase();
+        } else {
+            // Handle case where the user is not authenticated
+            System.out.println("Error: User not authenticated.");
+        }
+
+        // Call method to load history and create buttons
+        loadHistoryFromFirebase();
 
         cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
@@ -182,6 +215,57 @@ public class HomePageActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void loadHistoryFromFirebase() {
+        // Retrieve all history data from Firebase
+        historyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Clear the LinearLayout to avoid duplications
+                historyLayout.removeAllViews();
 
+                // Iterate through each history entry
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Get the object name, description, and imageUrl from the database
+                    String objectName = snapshot.child("objectName").getValue(String.class);
+                    String description = snapshot.child("description").getValue(String.class);
+                    String imageUrl = snapshot.child("imageUrl").getValue(String.class);
 
+                    // Create a button for each history entry
+                    Button historyButton = new Button(HomePageActivity.this);
+                    historyButton.setText(objectName);  // Set the object name as button text
+                    historyButton.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);  // Align text to the start, keep vertical centering
+                    historyButton.setBackgroundResource(R.drawable.history_button);
+
+                    // Create layout parameters for the button with margin
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,  // Width
+                            LinearLayout.LayoutParams.WRAP_CONTENT   // Height
+                    );
+                    params.setMargins(0, 16, 0, 16);
+                    historyButton.setLayoutParams(params);
+                    historyLayout.addView(historyButton);  // Add the button to the LinearLayout
+
+                    // Set click listener to show the details when the button is clicked
+                    historyButton.setOnClickListener(v -> {
+                        // When the button is clicked, navigate to ResultPage or show the image/details
+                        navigateToHistoryResultPage(objectName, description, imageUrl);
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors while loading data
+                System.out.println("Error loading history data: " + databaseError.getMessage());
+            }
+        });
+    }
+    private void navigateToHistoryResultPage(String objectName, String description, String imageUrl) {
+        // Navigate to ResultPage with the retrieved animal name, description, and image URL
+        Intent intent = new Intent(HomePageActivity.this, HistoryResultPageActivity.class);
+        intent.putExtra("result", objectName);
+        intent.putExtra("confidence", description);
+        intent.putExtra("imageUrl", imageUrl);
+        startActivity(intent);
+    }
 }
