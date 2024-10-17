@@ -1,18 +1,25 @@
 package com.example.objectowl;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,8 +51,6 @@ public class ClassifiedPage extends AppCompatActivity {
         // Initialize Firebase Storage and Realtime Database references
         storage = FirebaseStorage.getInstance();
         databaseReference = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("History");
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userUID = currentUser.getUid();
 
         // Get the image from the intent
         image = getIntent().getParcelableExtra("image");
@@ -117,6 +122,10 @@ public class ClassifiedPage extends AppCompatActivity {
         String result = resultTextView.getText().toString();
         String confidence = confidenceTextView.getText().toString();
 
+        //store detection data with the timestamp
+        saveDetectionToFirebase(result);
+
+        //upload image and save metadata to firebase storage and realtime database
         uploadImageToFirebaseStorage(result, confidence);
     }
 
@@ -176,6 +185,69 @@ public class ClassifiedPage extends AppCompatActivity {
         }
     }
 
+    //Save Detection Data with Timestamp to Firebase
+    private void saveDetectionToFirebase(String recognizedObject) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get current user ID
+        long timestamp = System.currentTimeMillis();  // Get current timestamp
+
+        // Create a map to store the detection data
+        Map<String, Object> detectionData = new HashMap<>();
+        detectionData.put("objectName", recognizedObject);
+        detectionData.put("timestamp", timestamp);
+
+        // Save the detection data under "Detections -> userUID"
+        DatabaseReference detectionRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Detections").child(userUID).push();
+        detectionRef.setValue(detectionData);
+    }
+
+    // Add this method to ClassifiedPage.java
+    public void displayWeeklyDetections(final TextView weeklyCountTextView) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+
+        String userUID = currentUser.getUid();  // Get current user ID
+
+        // Get the start of the current week (7 days ago)
+        long oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
+
+        // Reference to the detections node for the current user
+        DatabaseReference detectionRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("Detections").child(userUID);
+
+        detectionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int weeklyCount = 0;  // Count of detections this week
+
+                // Iterate through all detections for the current user
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    long timestamp = snapshot.child("timestamp").getValue(Long.class);
+
+                    // Check if the detection occurred within the past 7 days
+                    if (timestamp >= oneWeekAgo) {
+                        weeklyCount++;  // Increment the count if within the past week
+                    }
+                }
+
+                // Update the TextView with the number of objects detected this week
+                weeklyCountTextView.setText("Number of objects detected (this week): " + weeklyCount);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error retrieving data: " + databaseError.getMessage());
+            }
+        });
+    }
+
 
     private void navigateToResultPage(String result, String confidence, Bitmap image) {
         // Create an intent to pass the result, confidence, and image to ResultPage
@@ -185,5 +257,7 @@ public class ClassifiedPage extends AppCompatActivity {
         intent.putExtra("image", image);
         startActivity(intent);
     }
+
+
 
 }

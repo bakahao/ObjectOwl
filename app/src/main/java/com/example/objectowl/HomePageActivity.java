@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.Manifest;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -37,12 +38,12 @@ public class HomePageActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     ImageButton cameraButton;
-    int imageSize = 224;
     private static final int CAMERA_REQUEST_CODE = 100;
     LinearLayout historyLayout;
     DatabaseReference historyRef;
     FirebaseAuth auth;
     FirebaseUser currentUser;
+    TextView weeklyCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class HomePageActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation_view);
         cameraButton = findViewById(R.id.cameraButton);
         historyLayout = findViewById(R.id.historyLayout);
+        weeklyCountTextView = findViewById(R.id.numberOfObjectsDetected);
 
         // Initialize Firebase Authentication and get the current user
         auth = FirebaseAuth.getInstance();
@@ -81,6 +83,9 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Call method to load history and create buttons
         loadHistoryFromFirebase();
+
+        ClassifiedPage classifiedPage = new ClassifiedPage();
+        classifiedPage.displayWeeklyDetections(weeklyCountTextView);
 
         cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
@@ -175,7 +180,6 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void handleGuideClick() {
-        // TODO: Add your action for the User Guide button here
         // Navigate to User Guide Page
         Intent intent = new Intent(HomePageActivity.this, UserGuidePageActivity.class);
         startActivity(intent);
