@@ -125,6 +125,9 @@ public class ClassifiedPage extends AppCompatActivity {
         //store detection data with the timestamp
         saveDetectionToFirebase(result);
 
+        // After retrieving classification result and confidence
+        incrementObjectDetectionCount(result);
+
         //upload image and save metadata to firebase storage and realtime database
         uploadImageToFirebaseStorage(result, confidence);
     }
@@ -247,6 +250,37 @@ public class ClassifiedPage extends AppCompatActivity {
             }
         });
     }
+
+    private void incrementObjectDetectionCount(String recognizedObject) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get current user ID
+
+        // Reference to the object count in the Realtime Database
+        DatabaseReference objectCountRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("ObjectCounts").child(userUID).child(recognizedObject);
+
+        // Increment the count of the recognized object
+        objectCountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long currentCount = 0;
+                if (dataSnapshot.exists()) {
+                    currentCount = dataSnapshot.getValue(Long.class);  // Get current count
+                }
+                objectCountRef.setValue(currentCount + 1);  // Increment count by 1
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error updating object count: " + databaseError.getMessage());
+            }
+        });
+    }
+
 
 
     private void navigateToResultPage(String result, String confidence, Bitmap image) {

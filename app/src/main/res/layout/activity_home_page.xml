@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewDataAnalytics"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 app:cardCornerRadius="20dp"
@@ -110,14 +110,6 @@
                         android:textColor="#FF000000"
                         android:layout_marginBottom="5dp"/>
 
-                    <!-- Number of Detected (times) -->
-                    <TextView
-                        android:id="@+id/numberOfDetectedTimes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Number of Detected (time(s)): "
-                        android:textSize="16sp"
-                        android:textColor="#FF000000"/>
 
                 </LinearLayout>
 
@@ -169,6 +161,8 @@
                         android:layout_marginBottom="10dp"/>
 
                     <!-- Space for milestone images -->
+
+
 
                 </LinearLayout>
 

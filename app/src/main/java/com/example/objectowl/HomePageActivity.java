@@ -43,7 +43,7 @@ public class HomePageActivity extends AppCompatActivity {
     DatabaseReference historyRef;
     FirebaseAuth auth;
     FirebaseUser currentUser;
-    TextView weeklyCountTextView;
+    TextView weeklyCountTextView, mostDetectedObjectTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class HomePageActivity extends AppCompatActivity {
         cameraButton = findViewById(R.id.cameraButton);
         historyLayout = findViewById(R.id.historyLayout);
         weeklyCountTextView = findViewById(R.id.numberOfObjectsDetected);
+        mostDetectedObjectTextView = findViewById(R.id.mostCommonlyDetectedObject);
 
         // Initialize Firebase Authentication and get the current user
         auth = FirebaseAuth.getInstance();
@@ -81,11 +82,9 @@ public class HomePageActivity extends AppCompatActivity {
             System.out.println("Error: User not authenticated.");
         }
 
-        // Call method to load history and create buttons
-        loadHistoryFromFirebase();
-
         ClassifiedPage classifiedPage = new ClassifiedPage();
         classifiedPage.displayWeeklyDetections(weeklyCountTextView);
+        displayMostCommonlyDetectedObject();
 
         cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
@@ -264,6 +263,51 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void displayMostCommonlyDetectedObject() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get current user ID
+
+        // Reference to the ObjectCounts node for the current user
+        DatabaseReference objectCountsRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("ObjectCounts").child(userUID);
+
+        objectCountsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String mostCommonObject = null;
+                long highestCount = 0;
+
+                // Iterate through all detected objects and find the one with the highest count
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String objectName = snapshot.getKey();  // The object's name
+                    long count = snapshot.getValue(Long.class);  // The object's detection count
+
+                    if (count > highestCount) {
+                        highestCount = count;
+                        mostCommonObject = objectName;
+                    }
+                }
+
+                // Display the most commonly detected object
+                if (mostCommonObject != null) {
+                    mostDetectedObjectTextView.setText("Most Commonly Detected Object: " + mostCommonObject);
+                } else {
+                    mostDetectedObjectTextView.setText("Most Commonly Detected Object: None");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error retrieving object counts: " + databaseError.getMessage());
+            }
+        });
+    }
+
     private void navigateToHistoryResultPage(String objectName, String description, String imageUrl) {
         // Navigate to ResultPage with the retrieved animal name, description, and image URL
         Intent intent = new Intent(HomePageActivity.this, HistoryResultPageActivity.class);
