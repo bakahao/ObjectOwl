@@ -7,14 +7,17 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.service.controls.templates.ThumbnailTemplate;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -29,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import android.Manifest;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,7 +48,7 @@ public class HomePageActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser currentUser;
     TextView weeklyCountTextView, mostDetectedObjectTextView;
-
+    ImageView lockedMilestoneImage, unlockedMilestoneImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,15 @@ public class HomePageActivity extends AppCompatActivity {
         historyLayout = findViewById(R.id.historyLayout);
         weeklyCountTextView = findViewById(R.id.numberOfObjectsDetected);
         mostDetectedObjectTextView = findViewById(R.id.mostCommonlyDetectedObject);
+        lockedMilestoneImage = findViewById(R.id.lockedMilestoneImage);
+        unlockedMilestoneImage = findViewById(R.id.unlockedMilestoneImage);
+
+        // Set onClickListener for locked milestone
+        lockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(false, "first_milestone"));
+
+        // Set onClickListener for unlocked milestone
+        unlockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(true, "first_milestone"));
+
 
         // Initialize Firebase Authentication and get the current user
         auth = FirebaseAuth.getInstance();
@@ -85,6 +98,8 @@ public class HomePageActivity extends AppCompatActivity {
         ClassifiedPage classifiedPage = new ClassifiedPage();
         classifiedPage.displayWeeklyDetections(weeklyCountTextView);
         displayMostCommonlyDetectedObject();
+
+        checkForFirstMilestoneAchievement();
 
         cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
@@ -307,6 +322,99 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void checkForFirstMilestoneAchievement() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get current user ID
+
+        // Reference to ScannedObject node for the user
+        DatabaseReference scannedObjectRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("ScannedObject").child(userUID);
+
+        // Set up a ValueEventListener to listen for changes in ScannedObject
+        scannedObjectRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if any object exists in ScannedObject
+                if (dataSnapshot.exists()) {
+                    // At least one object exists, unlock the milestone
+                    unlockFirstMilestone();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error checking for milestone: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+    private void unlockFirstMilestone() {
+        // Find the milestone images in HomePageActivity
+
+        if (lockedMilestoneImage == null || unlockedMilestoneImage == null) {
+            Log.e("ScannedObject", "Milestone images not found in activity_home_page.xml");
+            return; // Exit if the views are not found
+        }
+
+        // Hide the locked milestone image and show the unlocked one
+        lockedMilestoneImage.setVisibility(View.GONE);
+        unlockedMilestoneImage.setVisibility(View.VISIBLE);
+    }
+
+    private void showMilestoneDetails(boolean isUnlocked, String milestoneType) {
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title
+        builder.setTitle("Milestone Details");
+
+        // Display different messages based on the milestone type and its locked/unlocked state
+        if (isUnlocked) {
+            // Display unlocked message for specific milestone
+            switch (milestoneType) {
+                case "first_milestone":
+                    builder.setMessage("Yay! You did it! You’ve unlocked your first achievement by scanning your very first item! " +
+                            "You're opening a whole new world of fun and learning. Keep going, superstar—you’re amazing!");
+                    break;
+                case "second_milestone":
+                    builder.setMessage("First 20 objects detected!\n75% of the users have this milestone.");
+                    break;
+                // Add more milestones here as needed
+                default:
+                    builder.setMessage("Milestone unlocked!");
+                    break;
+            }
+        } else {
+            // Display locked message for specific milestone
+            switch (milestoneType) {
+                case "first_milestone":
+                    builder.setMessage("Locked Milestone. Scan at least 1 object to unlock this achievement!");
+                    break;
+                case "second_milestone":
+                    builder.setMessage("Locked Milestone. Scan at least 10 objects to unlock this achievement!");
+                    break;
+                // Add more milestones here as needed
+                default:
+                    builder.setMessage("This milestone is locked. Keep scanning to unlock!");
+                    break;
+            }
+        }
+
+        // Set a positive button to dismiss the dialog
+        builder.setPositiveButton("Okay", (dialog, which) -> dialog.dismiss());
+
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 
     private void navigateToHistoryResultPage(String objectName, String description, String imageUrl) {
         // Navigate to ResultPage with the retrieved animal name, description, and image URL

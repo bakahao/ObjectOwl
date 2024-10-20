@@ -125,8 +125,9 @@ public class ClassifiedPage extends AppCompatActivity {
         //store detection data with the timestamp
         saveDetectionToFirebase(result);
 
-        // After retrieving classification result and confidence
         incrementObjectDetectionCount(result);
+
+        saveScannedObjectToFirebase(result);
 
         //upload image and save metadata to firebase storage and realtime database
         uploadImageToFirebaseStorage(result, confidence);
@@ -281,6 +282,34 @@ public class ClassifiedPage extends AppCompatActivity {
         });
     }
 
+    private void saveScannedObjectToFirebase(final String objectName) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User not authenticated.");
+            return;
+        }
+        String userUID = currentUser.getUid();  // Get current user ID
+
+        // Reference to ScannedObject node for the user
+        DatabaseReference scannedObjectRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("ScannedObject").child(userUID);
+
+        // Check if the object name already exists
+        scannedObjectRef.child(objectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Object does not exist, so save it
+                    scannedObjectRef.child(objectName).setValue(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Error checking object: " + databaseError.getMessage());
+            }
+        });
+    }
 
 
     private void navigateToResultPage(String result, String confidence, Bitmap image) {
