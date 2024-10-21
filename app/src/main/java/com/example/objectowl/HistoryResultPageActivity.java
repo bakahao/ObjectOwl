@@ -1,7 +1,6 @@
 package com.example.objectowl;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,14 +11,18 @@ import com.bumptech.glide.Glide;
 
 public class HistoryResultPageActivity extends AppCompatActivity {
 
+    ImageView resultImageView, homeButton;
+    TextView resultTextView, confidenceTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_result_page);
 
-        ImageView resultImageView = findViewById(R.id.resultImage);
-        TextView resultTextView = findViewById(R.id.objectName);
-        TextView confidenceTextView = findViewById(R.id.objectDetails);
+        resultImageView = findViewById(R.id.resultImage);
+        resultTextView = findViewById(R.id.objectName);
+        confidenceTextView = findViewById(R.id.objectDetails);
+        homeButton=findViewById(R.id.homeButton);
 
         // Retrieve the data from the intent
         Intent intent = getIntent();
@@ -33,6 +36,12 @@ public class HistoryResultPageActivity extends AppCompatActivity {
 
         // Use Glide or Picasso to load the image from Firebase Storage using the URL
         Glide.with(this).load(imageUrl).into(resultImageView);
+
+        homeButton.setOnClickListener(v -> {
+            Intent homeintent = new Intent(HistoryResultPageActivity.this, HomePageActivity.class);
+            startActivity(homeintent);
+            finish(); // Close the current ResultPage activity
+        });
     }
 
 }

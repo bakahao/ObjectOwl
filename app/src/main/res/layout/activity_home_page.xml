@@ -149,6 +149,11 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
                     <!-- Space for unlocked milestone images -->
                     <ImageView
                         android:id="@+id/unlockedMilestoneImage"
@@ -157,6 +162,14 @@
                         android:src="@drawable/first_unlocked_mil"
                         android:visibility="gone" />
 
+                    <ImageView
+                        android:id="@+id/ten_unlockedMilestoneImage"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ten_unlocked_mil"
+                        android:visibility="gone" />
+
+                </LinearLayout>
                     <!-- Locked Milestones Text -->
                     <TextView
                         android:id="@+id/lockedMilestonesText"
@@ -168,15 +181,29 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="10dp"/>
 
-                    <!-- Space for Locked milestone images -->
-                    <ImageView
-                        android:id="@+id/lockedMilestoneImage"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/first_locked_mil"
-                        android:visibility="visible" />
+                    <!-- Horizontal layout for locked milestone images -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:id="@+id/lockedMilestoneImage"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/first_locked_mil"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/ten_lockedMilestoneImage"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/ten_locked_mil"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
                 </LinearLayout>
+
 
             </androidx.cardview.widget.CardView>
 

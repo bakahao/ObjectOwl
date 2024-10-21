@@ -1,7 +1,12 @@
 package com.example.objectowl;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -9,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -19,12 +25,13 @@ import com.google.android.material.navigation.NavigationView;
 
 public class UserGuidePageActivity extends AppCompatActivity {
 
-    private boolean isContentVisible = false, isContentVisible1 = false;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
-    private NavigationView navigationView;
-    private MaterialButton textButton, textButton1;
-    private LinearLayout slidingContent, slidingContent1;
+    boolean isContentVisible = false, isContentVisible1 = false;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle toggle;
+    NavigationView navigationView;
+    MaterialButton textButton, textButton1;
+    LinearLayout slidingContent, slidingContent1;
+    TextView slidingContentTextView, slidingContentTextView1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,8 @@ public class UserGuidePageActivity extends AppCompatActivity {
         slidingContent = findViewById(R.id.sliding_content);
         textButton1 = findViewById(R.id.text_button1);
         slidingContent1 = findViewById(R.id.sliding_content1);
+        slidingContentTextView = findViewById(R.id.sliding_content_text);
+        slidingContentTextView1 = findViewById(R.id.sliding_content_text1);
 
         textButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,14 +147,42 @@ public class UserGuidePageActivity extends AppCompatActivity {
     }
 
     private void handleRecognizeClick() {
-        // TODO: Add your action for the Recognize Object button here
+        // Check if the camera permission is granted
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            //Start Camera intent if permission is granted
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, 1);
+        } else {
+            //Request camera permission if we don't have it.
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
+        }
     }
 
-    private void handleGuideClick() {
-        // TODO: Add your action for the User Guide button here
-        Intent intent = new Intent(UserGuidePageActivity.this, UserGuidePageActivity.class);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            // Get the image taken by the user
+            Bitmap image = (Bitmap) data.getExtras().get("data");
+
+            // Crop the image to fit TensorFlow Lite dimension
+            int dimension = Math.min(image.getWidth(), image.getHeight());
+            image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
+
+            // Navigate to ClassifiedPage with the image
+            navigateToClassifiedPage(image);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void navigateToClassifiedPage(Bitmap image) {
+        Intent intent = new Intent(UserGuidePageActivity.this, ClassifiedPage.class);
+        intent.putExtra("image", image); // Send the image to ClassifiedPage
         startActivity(intent);
-        finish(); // Close the HomePageActivity to prevent returning with the back button
+    }
+
+
+
+    private void handleGuideClick() {
     }
 
     private void handleSupportClick() {

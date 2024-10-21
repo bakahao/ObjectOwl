@@ -1,8 +1,8 @@
 package com.example.objectowl;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,9 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ResultPage extends AppCompatActivity {
 
-    ImageView resultImageView;
+    ImageView resultImageView, homeButton;
     TextView classifiedResult, classifiedConfidence;
     Bitmap image;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class ResultPage extends AppCompatActivity {
         resultImageView = findViewById(R.id.resultImage);
         classifiedResult = findViewById(R.id.objectName);
         classifiedConfidence = findViewById(R.id.objectDetails);
+        homeButton = findViewById(R.id.homeButton);
 
         image = getIntent().getParcelableExtra("image");
         String result = getIntent().getStringExtra("result");
@@ -31,5 +33,11 @@ public class ResultPage extends AppCompatActivity {
         resultImageView.setImageBitmap(image);
         classifiedResult.setText(result);
         classifiedConfidence.setText(confidence);
+
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ResultPage.this, HomePageActivity.class);
+            startActivity(intent);
+            finish(); // Close the current ResultPage activity
+        });
     }
 }

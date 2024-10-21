@@ -84,6 +84,7 @@
 
                 <!-- Add the content that will slide out -->
                 <TextView
+                    android:id="@+id/sliding_content_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="This is the sliding content"
@@ -120,6 +121,7 @@
 
                 <!-- Add the content that will slide out -->
                 <TextView
+                    android:id="@+id/sliding_content_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="This is the sliding content1"
