@@ -30,8 +30,6 @@ public class UserGuidePageActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     NavigationView navigationView;
     MaterialButton textButton, textButton1;
-    LinearLayout slidingContent, slidingContent1;
-    TextView slidingContentTextView, slidingContentTextView1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,43 +40,28 @@ public class UserGuidePageActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         textButton = findViewById(R.id.text_button);
-        slidingContent = findViewById(R.id.sliding_content);
         textButton1 = findViewById(R.id.text_button1);
-        slidingContent1 = findViewById(R.id.sliding_content1);
-        slidingContentTextView = findViewById(R.id.sliding_content_text);
-        slidingContentTextView1 = findViewById(R.id.sliding_content_text1);
 
+        // Set click listener for textButton to navigate to Guide1Activity
         textButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isContentVisible) {
-                    // Slide up and hide content
-                    slidingContent.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up));
-                    slidingContent.setVisibility(View.GONE);
-                } else {
-                    // Slide down and show content
-                    slidingContent.setVisibility(View.VISIBLE);
-                    slidingContent.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down));
-                }
-                isContentVisible = !isContentVisible;
+                // Navigate to Guide1Activity
+                Intent intent = new Intent(UserGuidePageActivity.this, GuideRecognizeObjectActivity.class);
+                startActivity(intent);
             }
         });
 
+        // Set click listener for textButton to navigate to Guide1MilestonesActivity
         textButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isContentVisible1) {
-                    // Slide up and hide content
-                    slidingContent1.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up));
-                    slidingContent1.setVisibility(View.GONE);
-                } else {
-                    // Slide down and show content
-                    slidingContent1.setVisibility(View.VISIBLE);
-                    slidingContent1.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down));
-                }
-                isContentVisible1 = !isContentVisible1;
+                // Navigate to Guide1Activity
+                Intent intent = new Intent(UserGuidePageActivity.this, GuideMilestonesActivity.class);
+                startActivity(intent);
             }
         });
+
 
         // Setup ActionBarDrawerToggle
         toggle = new ActionBarDrawerToggle(this, drawerLayout,

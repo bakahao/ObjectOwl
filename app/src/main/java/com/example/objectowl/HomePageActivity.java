@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.service.controls.templates.ThumbnailTemplate;
@@ -205,7 +206,25 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void handleSupportClick() {
-        // TODO: Add your action for the Customer Support button here
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:customerSupport_ObjectOwl@gmail.com")); // Replace with your support email
+
+        // Add email addresses, subject, and body (optional)
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"customerSupport_ObjectOwl@gmail.com"}); // Replace with your support email
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request");
+        intent.putExtra(Intent.EXTRA_TEXT, "Hello, I need help with...");
+
+        // Set Gmail package to open Gmail directly
+        intent.setPackage("com.google.android.gm");
+
+        // Check if Gmail is installed
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            // Fallback to chooser if Gmail is not installed
+            Intent chooserIntent = Intent.createChooser(intent, "Send Email");
+            startActivity(chooserIntent);
+        }
     }
 
     private void handleLogoutClick() {
