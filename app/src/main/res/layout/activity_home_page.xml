@@ -73,10 +73,13 @@
 
                 <!-- Container with Content -->
                 <LinearLayout
+                    android:id="@+id/DataAnalyticsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <!-- Header Text "Usage Statistics" -->
                     <TextView

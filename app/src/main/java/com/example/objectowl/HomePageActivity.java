@@ -44,12 +44,13 @@ public class HomePageActivity extends AppCompatActivity {
     private NavigationView navigationView;
     ImageButton cameraButton;
     private static final int CAMERA_REQUEST_CODE = 100;
-    LinearLayout historyLayout;
+    LinearLayout historyLayout, dataAnalyticsLayout;
     DatabaseReference historyRef;
     FirebaseAuth auth;
     FirebaseUser currentUser;
     TextView weeklyCountTextView, mostDetectedObjectTextView;
     ImageView lockedMilestoneImage, unlockedMilestoneImage, tenLockedMilestoneImage, tenUnlockedMilestoneImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,7 @@ public class HomePageActivity extends AppCompatActivity {
         unlockedMilestoneImage = findViewById(R.id.unlockedMilestoneImage);
         tenLockedMilestoneImage = findViewById(R.id.ten_lockedMilestoneImage);
         tenUnlockedMilestoneImage = findViewById(R.id.ten_unlockedMilestoneImage);
+        dataAnalyticsLayout = findViewById(R.id.DataAnalyticsLayout);
 
         // Set onClickListener for locked milestone
         lockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(false, "first_milestone"));
@@ -105,6 +107,19 @@ public class HomePageActivity extends AppCompatActivity {
         //check milestone
         checkForFirstMilestoneAchievement();
         checkTenObjectMilestone();
+
+
+        // Set OnClickListener to navigate to DataAnalyticsPageActivity
+        dataAnalyticsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to navigate to DataAnalyticsPageActivity
+                Intent intent = new Intent(HomePageActivity.this, DataAnalyticsPageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
         cameraButton.setOnClickListener(v -> handleRecognizeClick());
 
