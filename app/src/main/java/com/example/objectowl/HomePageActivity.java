@@ -49,7 +49,7 @@ public class HomePageActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser currentUser;
     TextView weeklyCountTextView, mostDetectedObjectTextView;
-    ImageView lockedMilestoneImage, unlockedMilestoneImage, tenLockedMilestoneImage, tenUnlockedMilestoneImage;
+    ImageView lockedMilestoneImage, unlockedMilestoneImage, tenLockedMilestoneImage, tenUnlockedMilestoneImage, fiftyLockedMilestoneImage, fiftyUnlockedMilestoneImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,8 @@ public class HomePageActivity extends AppCompatActivity {
         unlockedMilestoneImage = findViewById(R.id.unlockedMilestoneImage);
         tenLockedMilestoneImage = findViewById(R.id.ten_lockedMilestoneImage);
         tenUnlockedMilestoneImage = findViewById(R.id.ten_unlockedMilestoneImage);
+        fiftyLockedMilestoneImage = findViewById(R.id.fifty_lockedMilestoneImage);
+        fiftyUnlockedMilestoneImage = findViewById(R.id.fifty_unlockedMilestoneImage);
         dataAnalyticsLayout = findViewById(R.id.DataAnalyticsLayout);
 
         // Set onClickListener for locked milestone
@@ -75,6 +77,9 @@ public class HomePageActivity extends AppCompatActivity {
 
         tenLockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(false, "ten_milestone"));
         tenUnlockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(true, "ten_milestone"));
+
+        fiftyLockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(false, "fifty_milestone"));
+        fiftyUnlockedMilestoneImage.setOnClickListener(v -> showMilestoneDetails(true, "fifty_milestone"));
 
         // Initialize Firebase Authentication and get the current user
         auth = FirebaseAuth.getInstance();
@@ -107,6 +112,7 @@ public class HomePageActivity extends AppCompatActivity {
         //check milestone
         checkForFirstMilestoneAchievement();
         checkTenObjectMilestone();
+        checkFiftyObjectMilestone();
 
 
         // Set OnClickListener to navigate to DataAnalyticsPageActivity
@@ -438,6 +444,39 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
     }
+    private void checkFiftyObjectMilestone() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        String userUID = currentUser.getUid();
+        DatabaseReference scannedObjectRef = FirebaseDatabase.getInstance("https://objectowl-ad2b1-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("ScannedObject").child(userUID);
+
+        scannedObjectRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If ScannedObject exists, count the number of unique objects
+                    long scannedCount = dataSnapshot.getChildrenCount(); // Number of unique scanned objects
+
+                    if (scannedCount >= 50) {
+                        // Unlock the 10-object milestone
+                        fiftyLockedMilestoneImage.setVisibility(View.GONE);  // Hide locked milestone image
+                        fiftyUnlockedMilestoneImage.setVisibility(View.VISIBLE);  // Show unlocked milestone image
+                    }
+                } else {
+                    // ScannedObject does not exist, meaning no objects have been scanned yet
+                    fiftyLockedMilestoneImage.setVisibility(View.VISIBLE);  // Show locked milestone image
+                    fiftyUnlockedMilestoneImage.setVisibility(View.GONE);  // Hide unlocked milestone image
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error
+                System.out.println("Error checking scanned objects: " + error.getMessage());
+            }
+        });
+    }
 
 
 
@@ -460,7 +499,9 @@ public class HomePageActivity extends AppCompatActivity {
                     builder.setMessage("Wow, you're incredible! You've recognized 10 different objects! Your curiosity and sharp thinking are opening up a whole new world of discovery. " +
                             "Keep up the amazing work—you're a superstar at learning and exploring!");
                     break;
-                // Add more milestones here as needed
+                case "fifty_milestone":
+                    builder.setMessage("Wow, you're incredible! You've recognized 50 different objects! Your curiosity and sharp thinking are opening up a whole new world of discovery. "+
+                            "Keep up the amazing work—you're a superstar at learning and exploring!");
                 default:
                     builder.setMessage("Milestone unlocked!");
                     break;
@@ -474,7 +515,9 @@ public class HomePageActivity extends AppCompatActivity {
                 case "ten_milestone":
                     builder.setMessage("Locked Milestone. Scan 10 types of objects to unlock this achievement!");
                     break;
-                // Add more milestones here as needed
+                case "fifty_milestone":
+                    builder.setMessage("Locked Milestone. Scan 50 types of objects to unlock this achievement!");
+                    break;
                 default:
                     builder.setMessage("This milestone is locked. Keep scanning to unlock!");
                     break;

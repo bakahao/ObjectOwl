@@ -10,10 +10,9 @@
 9 Tractor
 10 Ambulance
 11 Fire truck
-12 Police car
-13 Helicopter
-14 Van
-15 Bulldozer
-16 Excavator
-17 Forklift
-18 Garbage truck
+12 Helicopter
+13 Van
+14 Bulldozer
+15 Excavator
+16 Forklift
+17 Garbage truck

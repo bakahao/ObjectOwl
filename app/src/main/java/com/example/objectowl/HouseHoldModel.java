@@ -51,10 +51,11 @@ public class HouseHoldModel {
             int maxPos = getMaxConfidencePos(confidences);
 
             // The labels for your classes (ensure this matches your model's output classes)
-            String[] classes = {"Table", "Chair", "Sofa", "Bed", "Television",
+            String[] classes = {"Table", "Chair", "Sofa", "Bed", "Laptop",
                     "Lamp", "Fan", "Cup", "Plate", "Spoon",
                     "Fork", "Knife", "Toothbrush", "Towel", "Fridge",
-                    "Remote Control", "Clock"};
+                    "Remote Control", "Clock", "Window", "Pillow", "Door",
+                    "Bookshelf", "Dustbin", "Mouse", "Keyboard", "Air Conditioner"};
 
             // Set the result in the TextView
             result.setText(classes[maxPos]);

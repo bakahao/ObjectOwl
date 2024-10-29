@@ -101,7 +101,7 @@ public class DataAnalyticsPageActivity extends AppCompatActivity {
 
                 // Set Legend label if needed
                 pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);  // Set form of legend
-                pieChart.getLegend().setTextSize(14f);  // Adjust text size of legend if needed
+                pieChart.getLegend().setTextSize(12f);  // Adjust text size of legend if needed
                 pieChart.getLegend().setEnabled(true);  // Enable legend if it's disabled
 
                 // Force chart to refresh

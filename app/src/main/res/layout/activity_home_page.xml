@@ -172,6 +172,13 @@
                         android:src="@drawable/ten_unlocked_mil"
                         android:visibility="gone" />
 
+                    <ImageView
+                        android:id="@+id/fifty_unlockedMilestoneImage"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/fifty_unlocked_mil"
+                        android:visibility="gone" />
+
                 </LinearLayout>
                     <!-- Locked Milestones Text -->
                     <TextView
@@ -202,6 +209,13 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@drawable/ten_locked_mil"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/fifty_lockedMilestoneImage"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/fifty_locked_mil"
                             android:visibility="visible" />
 
                     </LinearLayout>

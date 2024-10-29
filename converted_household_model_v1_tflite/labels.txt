@@ -2,7 +2,7 @@
 1 Chair
 2 Sofa
 3 Bed
-4 Television
+4 Laptop
 5 Lamp
 6 Fan
 7 Cup
@@ -15,4 +15,11 @@
 14 Fridge
 15 Remote Control
 16 Clock
-
+17 Window
+18 Pillow
+19 Door
+20 Bookshelf
+21 Dustbin
+22 Mouse
+23 Keyboard
+24 Air Conditioner

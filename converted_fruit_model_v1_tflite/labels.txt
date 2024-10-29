@@ -8,3 +8,13 @@
 7 Pineapple
 8 Watermelon
 9 Pear
+10 Papaya
+11 Kiwi
+12 Lemon
+13 Durian
+14 Coconut
+15 Avocado
+16 Cherry
+17 Rambutan
+18 Dragon Fruit
+19 Mangosteen

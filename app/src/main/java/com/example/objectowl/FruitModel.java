@@ -52,7 +52,9 @@ public class FruitModel {
 
             // The labels for your classes (ensure this matches your model's output classes)
             String[] classes = {"Apple", "Banana", "Orange", "Grapes", "Strawberry",
-                    "Blueberry", "Mango", "Pineapple", "Watermelon", "Pear"};
+                    "Blueberry", "Mango", "Pineapple", "Watermelon", "Pear",
+                    "Papaya", "Kiwi", "Lemon", "Durian", "Coconut",
+                    "Avocado", "Cherry", "Rambutan", "Dragon Fruit", "Mangosteen"};
 
             // Set the result in the TextView
             result.setText(classes[maxPos]);

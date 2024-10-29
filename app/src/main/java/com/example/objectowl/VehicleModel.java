@@ -53,8 +53,8 @@ public class VehicleModel {
             // The labels for your classes (ensure this matches your model's output classes)
             String[] classes = {"Car", "Bicycle", "Motorcycle", "Bus", "Train",
                     "Airplane", "Lorry", "Boat", "Scooter", "Tractor",
-                    "Ambulance", "Fire truck", "Police car", "Helicopter", "Van",
-                    "Bulldozer", "Excavator", "Forklift", "Garbage truck"};
+                    "Ambulance", "Fire truck", "Helicopter", "Van", "Bulldozer",
+                    "Excavator", "Forklift", "Garbage truck"};
 
             // Set the result in the TextView
             result.setText(classes[maxPos]);
