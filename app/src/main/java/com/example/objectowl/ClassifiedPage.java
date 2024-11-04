@@ -209,7 +209,7 @@ public class ClassifiedPage extends AppCompatActivity {
         detectionRef.setValue(detectionData);
     }
 
-    // Add this method to ClassifiedPage.java
+
     public void displayWeeklyDetections(final TextView weeklyCountTextView) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {

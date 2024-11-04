@@ -87,22 +87,22 @@ public class DataAnalyticsPageActivity extends AppCompatActivity {
                 }
 
                 // Create a PieDataSet with the pieEntries
-                PieDataSet dataSet = new PieDataSet(pieEntries, "Detected Objects Summary");  // Update this label
-                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);  // Set color template for the pie chart
-                dataSet.setValueTextSize(18f);  // Set the text size for the values inside the pie chart
+                PieDataSet dataSet = new PieDataSet(pieEntries, "Detected Objects Summary");
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTextSize(18f);  
 
                 // Create PieData and set it to the PieChart
                 PieData pieData = new PieData(dataSet);
                 pieData.setValueTextSize(18f);  // Set the text size for the value labels
-                pieData.setValueTextColor(getResources().getColor(R.color.black));  // Set the text color
+                pieData.setValueTextColor(getResources().getColor(R.color.black));
 
                 // Apply data to the chart
                 pieChart.setData(pieData);
 
                 // Set Legend label if needed
-                pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);  // Set form of legend
-                pieChart.getLegend().setTextSize(12f);  // Adjust text size of legend if needed
-                pieChart.getLegend().setEnabled(true);  // Enable legend if it's disabled
+                pieChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
+                pieChart.getLegend().setTextSize(12f);
+                pieChart.getLegend().setEnabled(true);
 
                 // Force chart to refresh
                 pieChart.invalidate();  // Refresh the chart with new data

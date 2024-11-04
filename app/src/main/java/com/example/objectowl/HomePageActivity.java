@@ -228,10 +228,10 @@ public class HomePageActivity extends AppCompatActivity {
 
     private void handleSupportClick() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:customerSupport_ObjectOwl@gmail.com")); // Replace with your support email
+        intent.setData(Uri.parse("mailto:customerSupport_ObjectOwl@gmail.com"));
 
         // Add email addresses, subject, and body (optional)
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"customerSupport_ObjectOwl@gmail.com"}); // Replace with your support email
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"customerSupport_ObjectOwl@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Support Request");
         intent.putExtra(Intent.EXTRA_TEXT, "Hello, I need help with...");
 
@@ -295,7 +295,7 @@ public class HomePageActivity extends AppCompatActivity {
                     // Create a button for each history entry
                     Button historyButton = new Button(HomePageActivity.this);
                     historyButton.setText(objectName);  // Set the object name as button text
-                    historyButton.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);  // Align text to the start, keep vertical centering
+                    historyButton.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
                     historyButton.setBackgroundResource(R.drawable.history_button);
 
                     // Create layout parameters for the button with margin

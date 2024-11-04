@@ -120,7 +120,7 @@ public class LoginPageActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(LoginPageActivity.this, HomePageActivity.class);
                         startActivity(intent);
-                        finish();  // Close the login page
+                        finish();
                     } else {
                         // If sign in fails, display a message to the user
                         try {

@@ -74,7 +74,6 @@ public class AnimalModel {
             // Display description
             displayConfidences(context, classes[maxPos], confidence);
 
-
             // Set the resized image in the ImageView (for displaying)
             imageView.setImageBitmap(resizedImage);
 
